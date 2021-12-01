@@ -1,6 +1,3 @@
--- lookup: 
--- function composition (can i run function composition directly with arguments)
-
 main = do
     contents <- getContents
     -- [10, 18, 17, 20, 15, 23, 24]
@@ -9,14 +6,24 @@ main = do
 
     let contentList = words contents
     let integerList = map strToInt contentList
-    let controlRow = init integerList
-    let diffRow = tail integerList
+
+    -- Addition to the previous one:
+    let sum = getTriplesSummed integerList
+    print sum
+
+    let controlRow = init sum
+    let diffRow = tail sum
     let compute = diff controlRow diffRow
 
     let foundPositive = filter (>0) compute
     
     print (length foundPositive)
     return ()
+
+-- Take three elements and sum them as a 'moving window of 3' that can be compared the same way later
+getTriplesSummed :: Num a => [a] -> [a] 
+getTriplesSummed [] = [0] 
+getTriplesSummed x = sum(take 3 x) : getTriplesSummed (tail x)
 
 diff :: Num a => [a] -> [a] -> [a]
 diff [] _ = [0]
