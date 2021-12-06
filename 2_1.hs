@@ -4,8 +4,6 @@ main = do
     contents <- getContents
 
     let contentList = lines contents
-    
-    --mapM_ print contentList -- print content
 
     let splitted = map splitIntoDirectionAndValue contentList
         values = map getValue splitted
