@@ -25,7 +25,6 @@ main = do
     return ()
 
 findStuff :: [[Int]] -> Int -> (Int -> Int -> Int) -> [Int]
-findStuff a 13 _ = error ("hey " ++ show a) -- a keeps being empty list [] here, so probably too much is filtered?
 findStuff [a] _ _ = a
 findStuff bitStrings pos decider =
     let amountOfOnes = foldl (\acc l -> acc + (l !! pos)) 0 bitStrings
