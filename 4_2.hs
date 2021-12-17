@@ -28,10 +28,20 @@ createBingoCardRow = map (\x -> (read x :: Int, False))
 
 play :: [[[(Int, Bool)]]] -> [Int] -> (Int, Int)
 play _ [] = (0, 0)
-play boards (number:rest) =
+play boards numbers =
+    let (winningBoard, winningNumber) = playTillExhaustion boards numbers
+    in (winningNumber, sumBoard $ winningBoard)
+
+playTillExhaustion :: [[[(Int, Bool)]]] -> [Int] -> ([[(Int, Bool)]], Int)
+playTillExhaustion [] _ = ([], -1)
+playTillExhaustion _ [] = ([], -2)
+playTillExhaustion boards (number : rest) =
     let newBoards = map (\board -> applyBoard board number) boards
-        winner = first checkBoard newBoards
-    in if isJust winner then (number, sumBoard $ fromJust winner) else play newBoards rest
+        ours = fromJust (first checkBoard newBoards)
+        restBoards = filter (not . checkBoard) newBoards
+        theirs = playTillExhaustion restBoards rest
+    in if (fst theirs) /= [] then theirs else (ours, number)
+
 
 sumBoard :: [[(Int, Bool)]] -> Int
 sumBoard board =
