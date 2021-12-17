@@ -6,12 +6,11 @@ main = do
 
     let rawLines = lines contents :: [String]
         rawLinesNoEmpty = filter (/= "") rawLines
-        calledNumbers = head rawLinesNoEmpty
+        calledNumbers = split (head rawLinesNoEmpty) ','
         rawCards = tail rawLinesNoEmpty
         bingoCards = createBingoCards rawCards
     print bingoCards
     print calledNumbers
-    print (split calledNumbers ',')
     return ()
 
 
