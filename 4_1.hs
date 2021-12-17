@@ -31,9 +31,14 @@ play _ [] = (0, 0)
 play boards (number:rest) = 
     let newBoards = map (\board -> applyBoard board number) boards
         winner = first checkBoard newBoards
-    in if isJust winner then (number, 100) else play newBoards rest
+    in if isJust winner then (number, sumBoard $ fromJust winner) else play newBoards rest
 
-
+sumBoard :: [[(Int, Bool)]] -> Int
+sumBoard board = 
+    let fields = concat board
+        relevant = filter (not snd) fields
+        numbers = map fst relevant
+    in sum numbers
 
 first :: (a -> Bool) -> [a] -> Maybe a
 first _ [] = Nothing
