@@ -53,32 +53,8 @@ checkBoard board =
         slices = rows ++ columns
     in any validateSlice slices
 
-
-
 validateSlice :: [(Int, Bool)] -> Bool
 validateSlice = all snd
 
 applyBoard :: [[(Int, Bool)]] -> Int -> [[(Int, Bool)]]
 applyBoard board number = map (map (\(field, called) -> (field, called || number == field))) board
-
-
-split :: String -> Char -> [String]
-split [] _ = []
-split str sep =
-    let (word, rest) = break (== sep) str
-    in word : split (dropWhile (== sep) rest) sep
-
--- split [] _ = []
--- split [char:rest] sep = 
---     if char /= sep 
---         then 
-
-
--- ???
-
--- split :: [Char] -> Char -> [String]
--- split string sep = foldr (\[h:t] v ->
---         if v == sep
---             then ["", h] ++ t
---             else [v ++ h] : t
---     ) [""] string
