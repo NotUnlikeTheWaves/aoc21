@@ -6,11 +6,12 @@ main = do
 
     let rawLines = lines contents :: [String]
         rawLinesNoEmpty = filter (/= "") rawLines
-        calledNumbers = split (head rawLinesNoEmpty) ','
+        calledNumbers = map (\x -> read x :: Int) $ split (head rawLinesNoEmpty) ','
         rawCards = tail rawLinesNoEmpty
         bingoCards = createBingoCards rawCards
     print bingoCards
     print calledNumbers
+    print $ play bingoCards calledNumbers
     return ()
 
 
@@ -30,7 +31,7 @@ play _ [] = (0, 0)
 play boards (number:rest) = 
     let newBoards = map (\board -> applyBoard board number) boards
         winner = first checkBoard newBoards
-    in if isJust winner then (Number, 100) else play newBoards rest
+    in if isJust winner then (number, 100) else play newBoards rest
 
 
 
