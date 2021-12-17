@@ -1,4 +1,5 @@
 import Data.List(transpose)
+import Data.Maybe
 
 main = do
     contents <- readFile "4.txt"
@@ -10,6 +11,7 @@ main = do
         bingoCards = createBingoCards rawCards
     print bingoCards
     print calledNumbers
+    print (split calledNumbers ',')
     return ()
 
 
@@ -23,9 +25,19 @@ createBingoCard = map (createBingoCardRow . words)
 createBingoCardRow :: [String] -> [(Int, Bool)]
 createBingoCardRow = map (\x -> (read x :: Int, False))
 
--- bingo :: [[[(Int, Bool)]]] -> [Int] -> (Int, Int)
--- bingo cards numbers = let
 
+play :: [[[(Int, Bool)]]] -> [Int] -> (Int, Int)
+play _ [] = (0, 0)
+play boards (number:rest) = 
+    let newBoards = map (\board -> applyBoard board number) boards
+        winner = first checkBoard newBoards
+    in if isJust winner then (Number, 100) else play newBoards rest
+
+
+
+first :: (a -> Bool) -> [a] -> Maybe a
+first _ [] = Nothing
+first f (head:tail) = if f head then Just head else first f tail
 
 checkBoard :: [[(Int, Bool)]] -> Bool
 checkBoard board =
@@ -42,6 +54,17 @@ validateSlice = all snd
 applyBoard :: [[(Int, Bool)]] -> Int -> [[(Int, Bool)]]
 applyBoard board number = map (map (\(field, called) -> (field, called || number == field))) board
 
+
+split :: String -> Char -> [String]
+split [] _ = []
+split str sep =
+    let (word, rest) = break (== sep) str
+    in word : split (dropWhile (== sep) rest) sep
+
+-- split [] _ = []
+-- split [char:rest] sep = 
+--     if char /= sep 
+--         then 
 
 
 -- ???
