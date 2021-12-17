@@ -9,9 +9,11 @@ main = do
         calledNumbers = map (\x -> read x :: Int) $ split (head rawLinesNoEmpty) ','
         rawCards = tail rawLinesNoEmpty
         bingoCards = createBingoCards rawCards
+        (winningNumber, summedRest) = play bingoCards calledNumbers
     print bingoCards
     print calledNumbers
-    print $ play bingoCards calledNumbers
+    print (winningNumber, summedRest)
+    print $ winningNumber * summedRest
     return ()
 
 
@@ -28,15 +30,15 @@ createBingoCardRow = map (\x -> (read x :: Int, False))
 
 play :: [[[(Int, Bool)]]] -> [Int] -> (Int, Int)
 play _ [] = (0, 0)
-play boards (number:rest) = 
+play boards (number:rest) =
     let newBoards = map (\board -> applyBoard board number) boards
         winner = first checkBoard newBoards
     in if isJust winner then (number, sumBoard $ fromJust winner) else play newBoards rest
 
 sumBoard :: [[(Int, Bool)]] -> Int
-sumBoard board = 
+sumBoard board =
     let fields = concat board
-        relevant = filter (not snd) fields
+        relevant = filter (not . snd) fields
         numbers = map fst relevant
     in sum numbers
 
